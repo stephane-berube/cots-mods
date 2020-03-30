@@ -1,0 +1,20 @@
+###
+# We want to handle our own log-file lifecycle, because while Atlassian
+# automatically "rotates" files every day by appending the date to the log
+# filenames, it never deletes anything. So what's we're doing is disabling the
+# default "rotation" (don't use the "date" suffix in filenames), and have
+# the Operating System's `logrotate` service take care of rotation/deletion
+###
+
+# default is true, which causes a date to be added to the filename
+1catalina.org.apache.juli.AsyncFileHandler.rotatable = false
+2localhost.org.apache.juli.AsyncFileHandler.rotatable = false
+3manager.org.apache.juli.AsyncFileHandler.rotatable = false
+4host-manager.org.apache.juli.AsyncFileHandler.rotatable = false
+
+# default is .log, but without date, the extra dot is not needed
+1catalina.org.apache.juli.AsyncFileHandler.suffix = log
+2localhost.org.apache.juli.AsyncFileHandler.suffix = log
+3manager.org.apache.juli.AsyncFileHandler.suffix = log
+4host-manager.org.apache.juli.AsyncFileHandler.suffix = log
+
