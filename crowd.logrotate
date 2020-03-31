@@ -1,0 +1,10 @@
+/opt/atlassian/crowd/atlassian-crowd/apache-tomcat/logscatalina.out {
+        daily
+        rotate 5
+        size 20M
+        nocompress
+        notifempty
+        missingok
+        copytruncate
+        su crowd crowd
+}
