@@ -1,11 +1,10 @@
---- ./server.xml.orig	2020-03-30 16:53:57.368776780 +0000
-+++ ./server.xml	2020-03-30 16:59:01.518324393 +0000
-@@ -109,6 +109,8 @@
+--- server.xml.orig	2020-03-31 13:44:33.479170370 +0000
++++ server.xml	2020-03-31 13:46:36.862994509 +0000
+@@ -109,6 +109,7 @@
  
              </Host>
              <Valve className="org.apache.catalina.valves.AccessLogValve"
-+		   rotatable="false"
-+		   suffix=".log"
++                   maxDays="30"
                     pattern="%a %{jira.request.id}r %{jira.request.username}r %t &quot;%m %U%q %H&quot; %s %b %D &quot;%{Referer}i&quot; &quot;%{User-Agent}i&quot; &quot;%{jira.request.assession.id}r&quot;"/>
          </Engine>
      </Service>
