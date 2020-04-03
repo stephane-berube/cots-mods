@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
 if [[ $# -lt 4 ]] ; then
-    echo "Usage: $0 <installerUrl> <dataVolume> <appVolume> <Environment>"
+    echo "Usage: $0 <installerUrl> <dataVolume> <appVolume> <Environment> [JIRAUrl]"
     echo ""
     echo "Example: $0 'https://example.org/installer.bin' /dev/sda /dev/sdb dev"
     exit 1
@@ -63,8 +63,14 @@ mv /tmp/cots-mods-jira/jira.service /etc/systemd/system/jira.service
 mv /tmp/cots-mods-jira/jira-config.properties /var/atlassian/application-data/jira/
 chown jira /var/atlassian/application-data/jira/jira-config.properties
 
-# Comment out the default Connector, and uncomment the reverse-proxied HTTPS one
-patch /opt/atlassian/jira/conf/server.xml /tmp/cots-mods-jira/https--server.xml.patch
+# If we've not been given a url, don't setup server.xml
+if [ ! -z ${JIRAUrl} ]; then
+    # Comment out the default Connector, and uncomment the reverse-proxied HTTPS one
+    patch /opt/atlassian/jira/conf/server.xml /tmp/cots-mods-jira/https--server.xml.patch
+
+    # Add proxyName info
+    sed -i "s/proxyName=\"<subdomain>.<domain>.com\"/proxyName=\"${JIRAUrl}\"/" /opt/atlassian/jira/conf/server.xml
+fi
 
 # Setup logging to be logrotate-friendly
 cat /tmp/cots-mods-jira/logging.properties.suffix >> /opt/atlassian/jira/conf/logging.properties
