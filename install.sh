@@ -12,8 +12,8 @@ EC2DataVolumeMount=$2
 EC2AppVolumeMount=$3
 Environment=$4
 
-# Create directories
-mkdir -p /opt/atlassian/jira /var/atlassian/application-data/jira
+# Create mountpoints
+mkdir -p /opt/atlassian /var/atlassian/application-data/jira
 
 # Wait until the data volume shows up
 while [ ! -e "${EC2DataVolumeMount}" ]; do echo Waiting for EBS Data volume to attach; sleep 5; done
@@ -31,10 +31,13 @@ while [ ! -e "${EC2AppVolumeMount}" ]; do echo Waiting for EBS App volume to att
 mkfs -t xfs "${EC2AppVolumeMount}"
 
 # Add an entry to fstab to mount volume during boot
-echo "${EC2AppVolumeMount}     /opt/atlassian/jira                xfs    defaults,noatime,nofail    0    2" >> /etc/fstab
+echo "${EC2AppVolumeMount}     /opt/atlassian                xfs    defaults,noatime,nofail    0    2" >> /etc/fstab
 
 # Mount the volumes on current boot
 mount -a
+
+# Create JIRA install directory
+mkdir /opt/atlassian/jira
 
 # Install deps
 yum install -y fontconfig patch java-1.8.0-openjdk
