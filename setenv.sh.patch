@@ -1,0 +1,22 @@
+--- ./setenv.orig.sh	2020-04-03 19:33:58.914490993 +0000
++++ setenv.sh	2020-04-03 19:36:31.013403887 +0000
+@@ -1,7 +1,7 @@
+ #
+ # One way to set the JIRA HOME path is here via this variable.  Simply uncomment it and set a valid path like /jira/home.  You can of course set it outside in the command terminal.  That will also work.
+ #
+-#JIRA_HOME=""
++JIRA_HOME="/var/atlassian/application-data/jira"
+ 
+ #
+ #  Occasionally Atlassian Support may recommend that you set some specific JVM arguments.  You can use this variable below to do that.
+@@ -11,8 +11,8 @@
+ #
+ # The following 2 settings control the minimum and maximum given to the JIRA Java virtual machine.  In larger JIRA instances, the maximum amount will need to be increased.
+ #
+-JVM_MINIMUM_MEMORY="384m"
+-JVM_MAXIMUM_MEMORY="2048m"
++JVM_MINIMUM_MEMORY="4096m"
++JVM_MAXIMUM_MEMORY="5144m"
+ 
+ #
+ # The following setting configures the size of JVM code cache.  A high value of reserved size allows Jira to work with more installed apps.

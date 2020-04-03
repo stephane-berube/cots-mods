@@ -68,6 +68,9 @@ cat /tmp/cots-mods-jira/logging.properties.suffix >> /opt/atlassian/jira/conf/lo
 patch /opt/atlassian/jira/conf/server.xml /tmp/cots-mods-jira/access-log--server.xml.patch
 mv /tmp/cots-mods-jira/jira.logrotate /etc/logrotate.d/jira.conf
 
+# Patch setenv.sh
+patch /opt/atlassian/jira/bin/setenv.sh /tmp/cots-mods-jira/setenv.sh.patch
+
 # If we're not on Prod, turn off email notifications
 if [ "${Environment}" != "prod" ]
 then
