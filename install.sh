@@ -59,6 +59,9 @@ systemctl disable jira
 # Copy our systemd unit file
 mv /tmp/cots-mods-jira/jira.service /etc/systemd/system/jira.service
 
+# Refresh systemd daemons since we've added a new unit file
+systemctl daemon-reload
+
 # Copy our JIRA configs over and fix permissions
 mv /tmp/cots-mods-jira/jira-config.properties /var/atlassian/application-data/jira/
 chown jira /var/atlassian/application-data/jira/jira-config.properties
@@ -80,20 +83,28 @@ mv /tmp/cots-mods-jira/jira.logrotate /etc/logrotate.d/jira.conf
 # Patch setenv.sh
 patch /opt/atlassian/jira/bin/setenv.sh /tmp/cots-mods-jira/setenv.sh.patch
 
-# If we're not on Prod, turn off email notifications
-if [ "${Environment}" != "prod" ]
-then
-  sed -i 's/#DISABLE_NOTIFICATIONS=/DISABLE_NOTIFICATIONS=/' /opt/atlassian/jira/bin/setenv.sh
-fi
-
 # Update email header to truncate quoted text from email replies
 # see: https://confluence.atlassian.com/jirakb/remove-previous-content-from-incoming-email-from-jira-server-in-microsoft-outlook-223218415.html
 patch /opt/atlassian/jira/atlassian-jira/WEB-INF/classes/templates/email/html/includes/header.vm /tmp/cots-mods-jira/header.vm.patch
 
-# Refresh systemd daemons since we've added a new unit file
-# start JIRA and enable startup at boot-time
-systemctl daemon-reload
-systemctl enable jira --now
+# Do a couple of things differently based on the environment
+if [ "${Environment}" == "prod" ]
+then
+  # Enable JIRA service at boot-time
+  systemctl enable jira
+else
+  # Turn off email notifications on non-prod
+  sed -i 's/#DISABLE_NOTIFICATIONS=/DISABLE_NOTIFICATIONS=/' /opt/atlassian/jira/bin/setenv.sh
+
+  # Delay JIRA startup when the EC2 is booting up (see comment in jira.timer for more details)
+  mv /tmp/cots-mods-jira/jira.timer /etc/systemd/system/jira.timer
+
+  # Enable JIRA service at boot-time via timer
+  systemctl enable jira.timer
+fi
+
+# Start JIRA for this current boot
+systemctl start jira
 
 # Cleanup
 rm -r /tmp/cots-mods-jira /tmp/installer.bin /tmp/pkg.zip
