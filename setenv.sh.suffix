@@ -1,0 +1,26 @@
+# ISED Modifications:
+# =================
+# Force file encoding to UTF-8Instead of using default OS/env value.
+# See: https://confluence.atlassian.com/confkb/filesystem-encoding-is-written-as-ansi_x3-4-1968-even-though-the-server-is-set-to-utf-8-658735809.html
+# Although the encoding/locale can be configured on a per-user environment with environment variables at the shell level, for portability we set it here in
+# the setenv.sh so regarless of which user start the service or regradless of which environment the app is moved too, the encoding will always be set to UTF-8.
+        CATALINA_OPTS="-Dfile.encoding=UTF-8 -Dsun.jnu.encoding=utf-8 ${CATALINA_OPTS}"
+        LC_ALL="en_US.UTF-8"
+        export LC_ALL
+
+# Set the JVM Memory allocation to a min/max of 6GB (was 2GB when running on a T2.Medium)
+        CATALINA_OPTS="-Xms6144m -Xmx6144m -XX:+UseG1GC ${CATALINA_OPTS}"
+
+# Set "confluence.upgrade.recovery.file.enabled=false" By default, Confluence creates an upgrade recovery file before and after an upgrade.
+# The operation can take long time on large databases and can be safely turned off if there is a process to back up database and verify the backup
+# before performing an upgrade. Setting this property to false will disable upgrade recovery file creation.
+        CATALINA_OPTS="-Dconfluence.upgrade.recovery.file.enabled=false ${CATALINA_OPTS}"
+
+# Confluence pulls the timezone from the operating system JVM; it can be overridden by passing the JVM arguments below.
+# More info: https://jira.atlassian.com/browse/CONFSERVER-16057
+# Best practice would be to also set the proper timezone at the EC2 instance level, but having it here prevent the timezone from reverting should Confluence
+# be moved to a new EC2 instance (which doesn't have the proper timezone set)
+# More info: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/set-time.html
+        CATALINA_OPTS="-Duser.timezone=Canada/Eastern ${CATALINA_OPTS}"
+
+export CATALINA_OPTS
