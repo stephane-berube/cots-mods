@@ -5,7 +5,8 @@ After=network.target
 [Service]
 Type=forking
 User=atlbitbucket
-Environment="JAVA_HOME=/opt/atlassian/bitbucket/install-directory/jre"
+Environment="JAVA_HOME=/etc/alternatives/jre"
+Environment="BITBUCKET_HOME=/var/atlassian/application-data/bitbucket"
 PIDFile=/var/atlassian/application-data/bitbucket/log/bitbucket.pid
 ExecStart=/opt/atlassian/bitbucket/install-directory/bin/start-bitbucket.sh
 ExecStop=/opt/atlassian/bitbucket/install-directory/bin/stop-bitbucket.sh
