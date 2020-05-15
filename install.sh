@@ -11,6 +11,7 @@ JIRAInstallerUrl=$1
 EC2DataVolumeMount=$2
 EC2AppVolumeMount=$3
 Environment=$4
+JIRAUrl=$5
 
 # Create mountpoints
 mkdir -p /opt/atlassian /var/atlassian/application-data/jira
