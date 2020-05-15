@@ -53,6 +53,10 @@ systemctl disable atlbitbucket
 # Copy our systemd unit file
 mv /tmp/cots-mods/atlbitbucket.service /etc/systemd/system/atlbitbucket.service
 
+# Get RDS root cert for TLS connection
+wget https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem \
+        -O /var/atlassian/application-data/bitbucket/rds-ca-2019-root.pem
+
 # Bitbucket uses its version number as a directory name when
 # it installs. Figure out what the directory name is rename it to 'bitbucket'
 # This folder is referenced by the systemd unit file (atlbitbucket.service)
