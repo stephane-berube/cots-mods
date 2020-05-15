@@ -1,9 +1,9 @@
 #!/bin/bash -xe
 
 if [[ $# -lt 3 ]] ; then
-    echo "Usage: setup.sh <installerUrl> <dataVolume> <appVolume>"
+    echo "Usage: $0 <installerUrl> <dataVolume> <appVolume>"
     echo ""
-    echo "Example: setup.sh 'https://example.org/installer.bin' /dev/sda /dev/sdb dev"
+    echo "Example: $0 'https://example.org/installer.bin' /dev/sda /dev/sdb dev"
     exit 1
 fi
 
