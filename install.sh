@@ -46,8 +46,7 @@ yes '' | /tmp/installer.bin
 # Stop the running Confluence instance
 service confluence stop
 
-# Setup logging to be logrotate-friendly
-cat /tmp/cots-mods-confluence/logging.properties.suffix >> /opt/atlassian/confluence/conf/logging.properties
+# Rotate catalina.out
 mv /tmp/cots-mods-confluence/confluence.logrotate /etc/logrotate.d/confluence.conf
 
 # Get RDS root cert for TLS connection
