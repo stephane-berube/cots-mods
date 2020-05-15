@@ -54,6 +54,10 @@ echo 'crowd.home=/var/atlassian/application-data/crowd' >> /opt/atlassian/crowd/
 cat /tmp/cots-mods-crowd/logging.properties.suffix >> /opt/atlassian/crowd/apache-tomcat/conf/logging.properties
 mv /tmp/cots-mods-crowd/crowd.logrotate /etc/logrotate.d/crowd.conf
 
+# Get RDS root cert for TLS connection
+wget https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem \
+        -O /var/atlassian/application-data/crowd/rds-ca-2019-root.pem
+
 # Copy our systemd unit file
 mv /tmp/cots-mods-crowd/crowd.service /etc/systemd/system/crowd.service
 
