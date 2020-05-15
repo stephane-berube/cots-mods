@@ -41,7 +41,7 @@ fi
 
 # Setup logging to be logrotate-friendly
 cat ./logging.properties.suffix >> "${new_install_dir}"/conf/logging.properties
-patch /opt/atlassian/jira/conf/server.xml ./access-log--server.xml.patch
+patch "${new_install_dir}"/conf/server.xml ./access-log--server.xml.patch
 
 # Patch setenv.sh
 patch "${new_install_dir}"/bin/setenv.sh ./setenv.sh.patch
