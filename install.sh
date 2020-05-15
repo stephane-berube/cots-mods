@@ -50,6 +50,10 @@ service confluence stop
 cat /tmp/cots-mods-confluence/logging.properties.suffix >> /opt/atlassian/confluence/conf/logging.properties
 mv /tmp/cots-mods-confluence/confluence.logrotate /etc/logrotate.d/confluence.conf
 
+# Get RDS root cert for TLS connection
+wget https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem \
+        -O /var/atlassian/application-data/confluence/rds-ca-2019-root.pem
+
 # Disable the old Confluence boot-time startup
 systemctl disable confluence
 
