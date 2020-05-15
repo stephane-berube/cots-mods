@@ -88,6 +88,10 @@ patch /opt/atlassian/jira/bin/setenv.sh /tmp/cots-mods-jira/setenv.sh.patch
 # see: https://confluence.atlassian.com/jirakb/remove-previous-content-from-incoming-email-from-jira-server-in-microsoft-outlook-223218415.html
 patch /opt/atlassian/jira/atlassian-jira/WEB-INF/classes/templates/email/html/includes/header.vm /tmp/cots-mods-jira/header.vm.patch
 
+# Get RDS root cert for TLS connection
+wget https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem \
+        -O /var/atlassian/application-data/jira/rds-ca-2019-root.pem
+
 # Do a couple of things differently based on the environment
 if [ "${Environment}" == "prod" ]
 then
