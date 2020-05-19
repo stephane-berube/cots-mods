@@ -1,0 +1,11 @@
+--- /opt/atlassian/jira/atlassian-jira/WEB-INF/classes/jira-workflow.xml	2020-05-19 14:44:54.550706395 +0000
++++ /opt/atlassian/jira-2020-05-15/atlassian-jira/WEB-INF/classes/jira-workflow.xml	2019-11-10 17:01:08.430555237 +0000
+@@ -298,7 +298,7 @@
+         </step>
+         <step id="6" name="Closed">
+             <meta name="jira.status.id">6</meta>
+-	    <meta name="jira.issue.editable">false</meta>
++            <meta name="jira.issue.editable">true</meta>
+             <actions>
+                 <common-action id="003"/>
+             </actions>

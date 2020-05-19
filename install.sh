@@ -84,6 +84,9 @@ mv /tmp/cots-mods-jira/jira.logrotate /etc/logrotate.d/jira.conf
 # Patch setenv.sh
 patch /opt/atlassian/jira/bin/setenv.sh /tmp/cots-mods-jira/setenv.sh.patch
 
+# Patch jira-workflow.xml
+patch /opt/atlassian/jira/atlassian-jira/WEB-INF/classes/jira-workflow.xml /tmp/cots-mods-jira/jira-workflow.xml.patch
+
 # Update email header to truncate quoted text from email replies
 # see: https://confluence.atlassian.com/jirakb/remove-previous-content-from-incoming-email-from-jira-server-in-microsoft-outlook-223218415.html
 patch /opt/atlassian/jira/atlassian-jira/WEB-INF/classes/templates/email/html/includes/header.vm /tmp/cots-mods-jira/header.vm.patch

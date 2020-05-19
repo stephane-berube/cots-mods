@@ -14,6 +14,7 @@ fi
 
 JIRAArchiveUrl=$1
 Environment=$2
+JIRAUrl=$3
 
 # Get and extract JIRA archive
 wget "${JIRAArchiveUrl}" -O /tmp/jira.tar.gz
@@ -45,6 +46,9 @@ patch "${new_install_dir}"/conf/server.xml ./access-log--server.xml.patch
 
 # Patch setenv.sh
 patch "${new_install_dir}"/bin/setenv.sh ./setenv.sh.patch
+
+# Patch jira-workflow.xml
+patch "${new_install_dir}"/atlassian-jira/WEB-INF/classes/jira-workflow.xml ./jira-workflow.xml.patch
 
 # If we're not on Prod, turn off email notifications
 if [ "${Environment}" != "prod" ]
