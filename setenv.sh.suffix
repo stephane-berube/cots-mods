@@ -8,8 +8,8 @@
         LC_ALL="en_US.UTF-8"
         export LC_ALL
 
-# Set the JVM Memory allocation to a min/max of 6GB (was 2GB when running on a T2.Medium)
-        CATALINA_OPTS="-Xms6144m -Xmx6144m -XX:+UseG1GC ${CATALINA_OPTS}"
+# Set the JVM Memory allocation to a min/max of 5GB (was 2GB when running on a T2.Medium)
+        CATALINA_OPTS="-Xms5120m -Xmx5120m -XX:+UseG1GC ${CATALINA_OPTS}"
 
 # Set "confluence.upgrade.recovery.file.enabled=false" By default, Confluence creates an upgrade recovery file before and after an upgrade.
 # The operation can take long time on large databases and can be safely turned off if there is a process to back up database and verify the backup
