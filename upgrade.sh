@@ -33,6 +33,13 @@ cat /tmp/cots-mods-crowd/logging.properties.suffix >> "${new_install_dir}"/apach
 # Add the custom banner on the login page
 patch "${new_install_dir}"/crowd-webapp/console/login.jsp /tmp/cots-mods-crowd/login.jsp.patch
 
+# Redirect homepage "setup" page to the login page
+# See: https://confluence.atlassian.com/crowdkb/redirect-crowd-server-setup-page-to-crowd-webapp-login-page-839978419.html
+cp "${new_install_dir}"/crowd-webapp/WEB-INF/lib/urlrewritefilter-4.0.3.jar "${new_install_dir}"/apache-tomcat/lib/
+cp "${new_install_dir}"/crowd-webapp/WEB-INF/urlrewrite.xml "${new_install_dir}"/apache-tomcat/webapps/ROOT/WEB-INF
+patch "${new_install_dir}"/apache-tomcat/webapps/ROOT/WEB-INF/urlrewrite.xml /tmp/cots-mods-crowd/urlrewrite.xml.patch
+patch "${new_install_dir}"/apache-tomcat/webapps/ROOT/WEB-INF/web.xml /tmp/cots-mods-crowd/web.xml.patch
+
 # Stop crowd
 systemctl stop crowd
 

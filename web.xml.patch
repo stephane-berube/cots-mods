@@ -1,0 +1,19 @@
+--- web.orig.xml	2020-05-30 13:25:42.716003491 +0000
++++ web.xml	2020-05-30 13:26:37.751823261 +0000
+@@ -7,4 +7,14 @@
+     <welcome-file-list>
+         <welcome-file>index.html</welcome-file>
+     </welcome-file-list>
+-</web-app>
+\ No newline at end of file
++
++    <filter>
++        <filter-name>url-rewrite</filter-name>
++        <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
++    </filter>
++
++    <filter-mapping>
++        <filter-name>url-rewrite</filter-name>
++        <url-pattern>/*</url-pattern>
++    </filter-mapping>
++</web-app>

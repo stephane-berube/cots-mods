@@ -1,0 +1,12 @@
+--- urlrewrite.orig.xml	2020-05-30 13:22:41.884603517 +0000
++++ urlrewrite.xml	2020-05-30 13:23:24.980493812 +0000
+@@ -1,5 +1,8 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN" "-//tuckey.org//DTD UrlRewrite 4.0//EN">
+ <urlrewrite>
+-    <class-rule class='com.atlassian.crowd.util.ResourceDownloadRewriteRule' />
++    <rule enabled="true">
++        <from>/</from>
++        <to type="permanent-redirect">/crowd/</to>
++    </rule>
+ </urlrewrite>
