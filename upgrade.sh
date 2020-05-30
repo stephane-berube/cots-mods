@@ -30,6 +30,9 @@ echo 'crowd.home=/var/atlassian/application-data/crowd' >> "${new_install_dir}"/
 # Setup logging to be logrotate-friendly
 cat /tmp/cots-mods-crowd/logging.properties.suffix >> "${new_install_dir}"/apache-tomcat/conf/logging.properties
 
+# Add the custom banner on the login page
+patch "${new_install_dir}"/crowd-webapp/console/login.jsp /tmp/cots-mods-crowd/login.jsp.patch
+
 # Stop crowd
 systemctl stop crowd
 

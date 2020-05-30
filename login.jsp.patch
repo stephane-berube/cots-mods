@@ -1,0 +1,36 @@
+--- /opt/atlassian/crowd/crowd-webapp/console/login.jsp	2020-05-18 16:15:58.000000000 +0000
++++ ./login.jsp	2020-01-22 19:59:00.169911081 +0000
+@@ -14,7 +14,33 @@
+     <meta name="viewport" content="width=device-width">
+ </head>
+ 
++<!-- ISED 22-JAN-2020: Custom In-line CSS Style for the notification message below -->
++<style>
++.info {
++      background-color:#4CAF50;
++      margin-left:20px;
++      margin-right:20px;
++      margin-top:20px;
++      color:white;
++      font-weight:bold;
++      font-size:20px;
++      text-align:center;
++      font-family: Arial, Helvetica, sans-serif;
++}
++</style>
++<!-- End of ISED Custom Code -->
++
+ <body>
++<!-- ISED 22-JAN-2020: Custom code to allow users to link back to the COTS after a password reset -->
++<br>
++<div class="info">
++    Once your password has been reset below, please use the following links to go back to the Application of your choice:<br>
++    To go back to JIRA click <b><a href="https://jira.ised-isde.canada.ca/login.jsp">here</a></b>.<br>
++    To go back to Confluence click <b><a href="https://wiki.ised-isde.canada.ca/login.action">here</a></b>.
++</div>
++<!-- End of ISED Custom Code -->
++
+ <div id="react-container"></div>
++<div style="color:blue;text-align:center"> Post Container Text</div>
+ </body>
+ </html>

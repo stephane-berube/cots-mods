@@ -36,7 +36,7 @@ echo "${EC2AppVolumeMount}     /opt/atlassian/crowd                xfs    defaul
 mount -a
 
 # Install deps
-yum install -y fontconfig
+yum install -y fontconfig patch
 
 # Get and extract Crowd archive
 wget "${CrowdArchiveUrl}" -O /tmp/atlassian-crowd.tar.gz
@@ -60,6 +60,9 @@ wget https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem \
 
 # Copy our systemd unit file
 mv /tmp/cots-mods-crowd/crowd.service /etc/systemd/system/crowd.service
+
+# Add the custom banner on the login page
+patch /opt/atlassian/crowd/crowd-webapp/console/login.jsp /tmp/cots-mods-crowd/login.jsp.patch
 
 # Refresh systemd daemons since we've added a new unit file
 # start Crowd and enable startup at boot-time
