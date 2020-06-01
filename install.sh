@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
 if [[ $# -lt 3 ]] ; then
-    echo "Usage: $0 <installerUrl> <dataVolume> <appVolume>"
+    echo "Usage: $0 <installerUrl> <dataVolume> <appVolume> [crowdDomain]"
     echo ""
     echo "Example: $0 'https://example.org/package.tar.gz' /dev/sda /dev/sdb dev"
     exit 1
@@ -10,6 +10,7 @@ fi
 JIRAInstallerUrl=$1
 EC2DataVolumeMount=$2
 EC2AppVolumeMount=$3
+crowdDomain=$4
 
 # Create directories
 mkdir -p /opt/atlassian/ /var/atlassian/application-data/crowd
@@ -70,6 +71,12 @@ cp /opt/atlassian/crowd/crowd-webapp/WEB-INF/lib/urlrewritefilter-4.0.3.jar /opt
 cp /opt/atlassian/crowd/crowd-webapp/WEB-INF/urlrewrite.xml /opt/atlassian/crowd/apache-tomcat/webapps/ROOT/WEB-INF
 patch /opt/atlassian/crowd/apache-tomcat/webapps/ROOT/WEB-INF/urlrewrite.xml /tmp/cots-mods-crowd/urlrewrite.xml.patch
 patch /opt/atlassian/crowd/apache-tomcat/webapps/ROOT/WEB-INF/web.xml /tmp/cots-mods-crowd/web.xml.patch
+
+# If we've been given a url, setup server.xml
+if [ ! -z ${crowdDomain} ]; then
+    patch /opt/atlassian/crowd/apache-tomcat/conf/server.xml /tmp/cots-mods-crowd/server.xml.patch
+    sed -i "s/{{ ised-crowd-domain }}/${crowdDomain}/g" /opt/atlassian/crowd/apache-tomcat/conf/server.xml
+fi
 
 # Refresh systemd daemons since we've added a new unit file
 # start Crowd and enable startup at boot-time

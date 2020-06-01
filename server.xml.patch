@@ -1,0 +1,12 @@
+--- server.orig.xml	2020-06-01 13:33:20.342232668 +0000
++++ server.xml	2020-06-01 13:34:06.506070925 +0000
+@@ -14,6 +14,9 @@
+                    redirectPort="8443"
+                    useBodyEncodingForURI="true"
+                    URIEncoding="UTF-8"
++                   scheme="https"
++                   proxyName="{{ ised-crowd-domain }}"
++                   proxyPort="443"
+                    compression="on"
+                    sendReasonPhrase="true"
+                    compressableMimeType="text/html,text/xml,application/xml,text/plain,text/css,application/json,application/javascript,application/x-javascript" />

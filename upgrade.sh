@@ -1,13 +1,14 @@
 #!/bin/bash -xe
 
 if [[ $# -lt 1 ]] ; then
-    echo "Usage: $0 <archiveUrl>"
+    echo "Usage: $0 <archiveUrl> [crowdDomain]"
     echo ""
     echo "Example: $0 'https://example.org/package.tar.gz' dev crowd.dev.example.org"
     exit 1
 fi
 
 CrowdArchiveUrl=$1
+crowdDomain=$2
 
 # Get and extract Crowd archive
 wget "${CrowdArchiveUrl}" -O /tmp/crowd.tar.gz
@@ -39,6 +40,12 @@ cp "${new_install_dir}"/crowd-webapp/WEB-INF/lib/urlrewritefilter-4.0.3.jar "${n
 cp "${new_install_dir}"/crowd-webapp/WEB-INF/urlrewrite.xml "${new_install_dir}"/apache-tomcat/webapps/ROOT/WEB-INF
 patch "${new_install_dir}"/apache-tomcat/webapps/ROOT/WEB-INF/urlrewrite.xml /tmp/cots-mods-crowd/urlrewrite.xml.patch
 patch "${new_install_dir}"/apache-tomcat/webapps/ROOT/WEB-INF/web.xml /tmp/cots-mods-crowd/web.xml.patch
+
+# If we've been given a url, setup server.xml
+if [ ! -z ${crowdDomain} ]; then
+    patch "${new_install_dir}"/apache-tomcat/conf/server.xml /tmp/cots-mods-crowd/server.xml.patch
+    sed -i "s/{{ ised-crowd-domain }}/${crowdDomain}/g" "${new_install_dir}"/apache-tomcat/conf/server.xml
+fi
 
 # Stop crowd
 systemctl stop crowd
