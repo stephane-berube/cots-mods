@@ -67,8 +67,8 @@ systemctl daemon-reload
 mv /tmp/cots-mods-jira/jira-config.properties /var/atlassian/application-data/jira/
 chown jira /var/atlassian/application-data/jira/jira-config.properties
 
-# If we've not been given a url, don't setup server.xml
-if [ ! -z ${JIRAUrl} ]; then
+# If we've been given a url, setup server.xml
+if [ -n "${JIRAUrl}" ]; then
     # Comment out the default Connector, and uncomment the reverse-proxied HTTPS one
     patch /opt/atlassian/jira/conf/server.xml /tmp/cots-mods-jira/https--server.xml.patch
 

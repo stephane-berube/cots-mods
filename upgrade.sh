@@ -31,8 +31,8 @@ tar -xf /tmp/jira.tar.gz -C /tmp/jira/
 # Figure out the folder name atlassian gave this release
 new_install_dir=$(find /tmp/jira/* -maxdepth 0 -type d)
 
-# If we've not been given a url, don't setup server.xml
-if [ ! -z ${JIRAUrl} ]; then
+# If we've been given a url, setup server.xml
+if [ -n "${JIRAUrl}" ]; then
     # Comment out the default Connector, and uncomment the reverse-proxied HTTPS one
     patch "${new_install_dir}"/conf/server.xml ./https--server.xml.patch
 
@@ -64,7 +64,7 @@ patch "${new_install_dir}"/atlassian-jira/WEB-INF/classes/templates/email/html/i
 systemctl stop jira
 
 # Replace the current install with the new one
-mv /opt/atlassian/jira/ /opt/atlassian/jira-$(date +%Y-%m-%d)
+mv /opt/atlassian/jira/ "/opt/atlassian/jira-$(date +%Y-%m-%d)"
 mv "${new_install_dir}" /opt/atlassian/jira
 chown -R jira:jira jira
 
