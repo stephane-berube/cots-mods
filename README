@@ -1,1 +1,11 @@
-todo
+This repository contains scripts to install and upgrade Atlassian products on
+AWS. They also apply some minor tweaks to some of the configuration files.
+
+The "install.sh" scripts can be used in the UserData section of an EC2 resource
+in Cloudformation templates.
+
+The "upgrade.sh" scripts can be run on an existing EC2 by extracting the branch
+.zip in the /tmp folder of the EC2, and running it with the proper arguments.
+
+Each product has its own branch, where more details can be found.
+
