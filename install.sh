@@ -74,6 +74,13 @@ if [ ! -z ${JIRAUrl} ]; then
 
     # Add proxyName info
     sed -i "s/proxyName=\"<subdomain>.<domain>.com\"/proxyName=\"${JIRAUrl}\"/" /opt/atlassian/jira/conf/server.xml
+
+    if [ "${Environment}" != "prod" ]; then
+        # Resolve JIRA url as localhost to fix Dashboard widget loading issues
+        # This is necessary for non-public-facing instances due to rules on the
+        # load-balancer
+        echo "127.0.0.1   ${JIRAUrl}" >> /etc/hosts
+    fi
 fi
 
 # Setup logging to be logrotate-friendly
