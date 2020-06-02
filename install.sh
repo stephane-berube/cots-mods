@@ -7,7 +7,7 @@ if [[ $# -lt 3 ]] ; then
     exit 1
 fi
 
-JIRAInstallerUrl=$1
+ConfluenceInstallerUrl=$1
 EC2DataVolumeMount=$2
 EC2AppVolumeMount=$3
 
