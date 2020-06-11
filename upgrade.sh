@@ -5,16 +5,15 @@
 #       We could do this by inspecting the subnet on which the current machine
 #       is on, for example.
 
-if [[ $# -lt 2 ]]; then
-    echo "Usage: $0 <archiveUrl> <Environment> [ConfluenceUrl]"
+if [[ $# -lt 1 ]]; then
+    echo "Usage: $0 <archiveUrl> [ConfluenceInstanceDomain]"
     echo ""
     echo "Example: $0 'https://example.org/archive.tar.gz' prod"
     exit 1
 fi
 
 ConfluenceArchiveUrl=$1
-Environment=$2
-ConfluenceUrl=$3
+ConfluenceInstanceDomain=$2
 
 # Get and extract Confluence archive
 wget "${ConfluenceArchiveUrl}" -O /tmp/confluence.tar.gz
@@ -32,12 +31,12 @@ tar -xf /tmp/confluence.tar.gz -C /tmp/confluence/
 new_install_dir=$(find /tmp/confluence/* -maxdepth 0 -type d)
 
 # If we've not been given a url, don't setup server.xml
-if [ -n "${ConfluenceUrl}" ]; then
+if [ -n "${ConfluenceInstanceDomain}" ]; then
     # Comment out the default Connector, and uncomment the reverse-proxied HTTPS one
     patch "${new_install_dir}"/conf/server.xml ./server.xml.patch
 
     # Add proxyName info
-    sed -i "s/proxyName=\"<subdomain>.<domain>.com\"/proxyName=\"${ConfluenceUrl}\"/" "${new_install_dir}"/conf/server.xml
+    sed -i "s/proxyName=\"<subdomain>.<domain>.com\"/proxyName=\"${ConfluenceInstanceDomain}\"/" "${new_install_dir}"/conf/server.xml
 fi
 
 # Update the location of the Confluence home directory
