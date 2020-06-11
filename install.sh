@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
 if [[ $# -lt 3 ]] ; then
-    echo "Usage: $0 <installerUrl> <dataVolume> <appVolume> [BitbucketUrl]"
+    echo "Usage: $0 <installerUrl> <dataVolume> <appVolume> Environment [BitbucketUrl]"
     echo ""
     echo "Example: $0 'https://example.org/installer.bin' /dev/sda /dev/sdb dev"
     exit 1
@@ -10,7 +10,8 @@ fi
 BitbucketInstallerUrl=$1
 EC2DataVolumeMount=$2
 EC2AppVolumeMount=$3
-BitbucketUrl=$4
+Environment=$4
+BitbucketUrl=$5
 
 # Create directories
 mkdir -p /opt/atlassian/bitbucket /var/atlassian/application-data/bitbucket
@@ -53,6 +54,9 @@ systemctl disable atlbitbucket
 # Copy our systemd unit file
 mv /tmp/cots-mods/atlbitbucket.service /etc/systemd/system/atlbitbucket.service
 
+# Refresh systemd daemons since we've added a new unit file
+systemctl daemon-reload
+
 # Get RDS root cert for TLS connection
 wget https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem \
         -O /var/atlassian/application-data/bitbucket/rds-ca-2019-root.pem
@@ -69,10 +73,20 @@ then
   echo "server.proxy-name=${BitbucketUrl}" >> /var/atlassian/application-data/bitbucket/shared/bitbucket.properties
 fi
 
-# Refresh systemd daemons since we've added a new unit file
-# start Bitbucket and enable startup at boot-time
-systemctl daemon-reload
-systemctl enable atlbitbucket --now
+# Do a couple of things differently based on the environment
+if [ "${Environment}" == "prod" ]; then
+  # Enable Bitbucket service at boot-time
+  systemctl enable atlbitbucket
+else
+  # Delay Bitbucket startup when the EC2 is booting up (see comment in atlbitbucket.timer for more details)
+  mv /tmp/cots-mods-bitbucket/jira.timer /etc/systemd/system/atlbitbucket.timer
+
+  # Enable JIRA service at boot-time via timer
+  systemctl enable atlbitbucket.timer
+fi
+
+# Start Bitbucket for this current boot
+systemctl start atlbitbucket
 
 # Cleanup
 rm -f /tmp/cots-mods /tmp/installer.bin /tmp/pkg.zip
