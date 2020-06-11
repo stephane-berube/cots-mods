@@ -56,6 +56,8 @@ systemctl stop confluence
 mv /opt/atlassian/confluence/ "/tmp/confluence-$(date +%Y-%m-%d)"
 mv "${new_install_dir}" /opt/atlassian/confluence
 
+chown confluence:confluence -R confluence
+
 # Start confluence
 systemctl start confluence
 
