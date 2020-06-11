@@ -1,15 +1,17 @@
 #!/bin/bash -xe
 
 if [[ $# -lt 3 ]] ; then
-    echo "Usage: $0 <installerUrl> <dataVolume> <appVolume>"
+    echo "Usage: $0 <installerUrl> <dataVolume> <appVolume> <Environment> [ConfluenceInstanceDomain]"
     echo ""
-    echo "Example: $0 'https://example.org/installer.bin' /dev/sda /dev/sdb dev"
+    echo "Example: $0 'https://example.org/installer.bin' /dev/sda /dev/sdb dev wiki.dev.example.org"
     exit 1
 fi
 
 ConfluenceInstallerUrl=$1
 EC2DataVolumeMount=$2
 EC2AppVolumeMount=$3
+Environment=$4
+ConfluenceInstanceDomain=$5
 
 # Create directories
 mkdir -p /opt/atlassian/confluence /var/atlassian/application-data/confluence
@@ -62,7 +64,35 @@ mv /tmp/cots-mods-confluence/confluence.service /etc/systemd/system/confluence.s
 # Refresh systemd daemons since we've added a new unit file
 # start Confluence and enable startup at boot-time
 systemctl daemon-reload
-systemctl enable confluence --now
+
+# If we've been given a url, setup server.xml
+if [ -n "${ConfluenceInstanceDomain}" ]; then
+    # Comment out the default Connector, and uncomment the reverse-proxied HTTPS one
+    patch /opt/atlassian/confluence/conf/server.xml /tmp/cots-mods-confluence/server.xml.patch
+
+    # Add proxyName info
+    sed -i "s/proxyName=\"<subdomain>.<domain>.com\"/proxyName=\"${ConfluenceInstanceDomain}\"/" /opt/atlassian/confluence/conf/server.xml
+fi
+
+# Remove default Xms, Xmx values
+sed -i '/CATALINA_OPTS="-Xms1024m -Xmx1024/d' /opt/atlassian/confluence/bin/setenv.sh
+# Append our customizations (which include new values for Xms and Xmx)
+cat ./setenv.sh.suffix >> /opt/atlassian/confluence/bin/setenv.sh
+
+# Do a couple of things differently based on the environment
+if [ "${Environment}" == "prod" ]
+    # Enable Confluence service at boot-time
+    systemctl enable confluence
+else
+    # Delay Confluence startup when the EC2 is booting up (see comment in confluence.timer for more details)
+    mv /tmp/cots-mods-confluence/confluence.timer /etc/systemd/system/confluence.timer
+
+    # Enable Confluence service at boot-time via timer
+    systemctl enable confluence.timer
+fi
+
+# Start Confluence for this current boot
+systemctl start confluence
 
 # Cleanup
 rm -r /tmp/cots-mods-confluence /tmp/pkg.zip /tmp/installer.bin
