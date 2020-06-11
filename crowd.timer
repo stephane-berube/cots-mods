@@ -1,0 +1,14 @@
+# We're using a timer instead of a plain systemd service to delay Crowd's start
+# when the EC2 is booting up.
+#
+# We do this to ensure Crowd is started after the RDS is up and running when the
+# Instance Scheduler spins-up both the EC2 and RDS at the same time
+
+[Unit]
+Description=Crowd
+
+[Timer]
+OnBootSec=5min
+
+[Install]
+WantedBy=multi-user.target

@@ -1,16 +1,17 @@
 #!/bin/bash -xe
 
 if [[ $# -lt 3 ]] ; then
-    echo "Usage: $0 <installerUrl> <dataVolume> <appVolume> [crowdDomain]"
+    echo "Usage: $0 <installerUrl> <dataVolume> <appVolume> [Environment] [crowdDomain]"
     echo ""
-    echo "Example: $0 'https://example.org/package.tar.gz' /dev/sda /dev/sdb dev"
+    echo "Example: $0 'https://example.org/package.tar.gz' /dev/sda /dev/sdb dev crowd.dev.example.orga"
     exit 1
 fi
 
 CrowdArchiveUrl=$1
 EC2DataVolumeMount=$2
 EC2AppVolumeMount=$3
-crowdDomain=$4
+Environment=$4
+crowdDomain=$5
 
 # Create directories
 mkdir -p /opt/atlassian/ /var/atlassian/application-data/crowd
@@ -62,6 +63,9 @@ wget https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem \
 # Copy our systemd unit file
 mv /tmp/cots-mods-crowd/crowd.service /etc/systemd/system/crowd.service
 
+# Refresh systemd daemons since we've added a new unit file
+systemctl daemon-reload
+
 # Add the custom banner on the login page
 patch /opt/atlassian/crowd/crowd-webapp/console/login.jsp /tmp/cots-mods-crowd/login.jsp.patch
 
@@ -78,10 +82,20 @@ if [ ! -z ${crowdDomain} ]; then
     sed -i "s/{{ ised-crowd-domain }}/${crowdDomain}/g" /opt/atlassian/crowd/apache-tomcat/conf/server.xml
 fi
 
-# Refresh systemd daemons since we've added a new unit file
-# start Crowd and enable startup at boot-time
-systemctl daemon-reload
-systemctl enable crowd --now
+# Do a couple of things differently based on the environment
+if [ "${Environment}" == "prod" ]; then
+    # Enable Crowd service at boot-time
+    systemctl enable crowd
+else
+    # Delay Crowd startup when the EC2 is booting up (see comment in crowd.timer for more details)
+    mv /tmp/cots-mods-crowd/crowd.timer /etc/systemd/system/crowd.timer
+
+    # Enable Crowd service at boot-time via timer
+    systemctl enable crowd.timer
+fi
+
+# Start Crowd for this current boot
+systemctl start crowd
 
 # Cleanup
 rm -r /tmp/cots-mods-crowd /tmp/pkg.zip /tmp/atlassian-crowd.tar.gz
