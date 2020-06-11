@@ -17,7 +17,7 @@ crowdDomain=$5
 mkdir -p /opt/atlassian/ /var/atlassian/application-data/crowd
 
 # Wait until the volume shows up
-while [ ! -e ${EC2DataVolumeMount} ]; do echo Waiting for EBS Data volume to attach; sleep 5; done
+while [ ! -e "${EC2DataVolumeMount}" ]; do echo Waiting for EBS Data volume to attach; sleep 5; done
 
 # Create filesystem
 mkfs -t xfs "${EC2DataVolumeMount}"
@@ -26,7 +26,7 @@ mkfs -t xfs "${EC2DataVolumeMount}"
 echo "${EC2DataVolumeMount}    /var/atlassian/application-data/crowd xfs    defaults,noatime,nofail    0    2" >> /etc/fstab
 
 # Wait until the volume shows up
-while [ ! -e ${EC2AppVolumeMount} ]; do echo Waiting for EBS App volume to attach; sleep 5; done
+while [ ! -e "${EC2AppVolumeMount}" ]; do echo Waiting for EBS App volume to attach; sleep 5; done
 
 # Create filesystem
 mkfs -t xfs "${EC2AppVolumeMount}"
@@ -77,7 +77,7 @@ patch /opt/atlassian/crowd/apache-tomcat/webapps/ROOT/WEB-INF/urlrewrite.xml /tm
 patch /opt/atlassian/crowd/apache-tomcat/webapps/ROOT/WEB-INF/web.xml /tmp/cots-mods-crowd/web.xml.patch
 
 # If we've been given a url, setup server.xml
-if [ ! -z ${crowdDomain} ]; then
+if [ -n "${crowdDomain}" ]; then
     patch /opt/atlassian/crowd/apache-tomcat/conf/server.xml /tmp/cots-mods-crowd/server.xml.patch
     sed -i "s/{{ ised-crowd-domain }}/${crowdDomain}/g" /opt/atlassian/crowd/apache-tomcat/conf/server.xml
 fi

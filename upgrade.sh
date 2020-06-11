@@ -42,7 +42,7 @@ patch "${new_install_dir}"/apache-tomcat/webapps/ROOT/WEB-INF/urlrewrite.xml /tm
 patch "${new_install_dir}"/apache-tomcat/webapps/ROOT/WEB-INF/web.xml /tmp/cots-mods-crowd/web.xml.patch
 
 # If we've been given a url, setup server.xml
-if [ ! -z ${crowdDomain} ]; then
+if [ -n "${crowdDomain}" ]; then
     patch "${new_install_dir}"/apache-tomcat/conf/server.xml /tmp/cots-mods-crowd/server.xml.patch
     sed -i "s/{{ ised-crowd-domain }}/${crowdDomain}/g" "${new_install_dir}"/apache-tomcat/conf/server.xml
 fi
