@@ -17,16 +17,16 @@ ConfluenceInstanceDomain=$5
 mkdir -p /opt/atlassian/confluence /var/atlassian/application-data/confluence
 
 # Wait until the volume shows up
-while [ ! -e ${EC2DataVolumeMount} ]; do echo Waiting for EBS Data volume to attach; sleep 5; done
+while [ ! -e "${EC2DataVolumeMount}" ]; do echo Waiting for EBS Data volume to attach; sleep 5; done
 
 # Create filesystem
-mkfs -t xfs "${EBSDataMount}"
+mkfs -t xfs "${EC2DataVolumeMount}"
 
 # Add an entry to fstab to mount volume during boot
 echo "${EC2DataVolumeMount}    /var/atlassian/application-data/confluence xfs    defaults,noatime,nofail    0    2" >> /etc/fstab
 
 # Wait until the volume shows up
-while [ ! -e ${EBSAppMount} ]; do echo Waiting for EBS App volume to attach; sleep 5; done
+while [ ! -e "${EC2AppVolumeMount}" ]; do echo Waiting for EBS App volume to attach; sleep 5; done
 
 # Create filesystem
 mkfs -t xfs "${EC2AppVolumeMount}"
@@ -80,7 +80,7 @@ sed -i '/CATALINA_OPTS="-Xms1024m -Xmx1024/d' /opt/atlassian/confluence/bin/sete
 cat ./setenv.sh.suffix >> /opt/atlassian/confluence/bin/setenv.sh
 
 # Do a couple of things differently based on the environment
-if [ "${Environment}" == "prod" ]
+if [ "${Environment}" == "prod" ]; then
     # Enable Confluence service at boot-time
     systemctl enable confluence
 else
