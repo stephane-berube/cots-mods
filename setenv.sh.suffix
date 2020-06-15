@@ -23,4 +23,9 @@
 # More info: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/set-time.html
         CATALINA_OPTS="-Duser.timezone=Canada/Eastern ${CATALINA_OPTS}"
 
+# Hide the People Directory from anonymous users
+# https://confluence.atlassian.com/doc/hiding-the-people-directory-196816.html
+        CATALINA_OPTS="-Dconfluence.disable.peopledirectory.anonymous=true ${CATALINA_OPTS}"
+
 export CATALINA_OPTS
+
