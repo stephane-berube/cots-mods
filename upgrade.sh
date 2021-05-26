@@ -29,21 +29,21 @@ new_install_dir=$(find /tmp/crowd/* -maxdepth 0 -type d)
 echo 'crowd.home=/var/atlassian/application-data/crowd' >> "${new_install_dir}"/crowd-webapp/WEB-INF/classes/crowd-init.properties
 
 # Setup logging to be logrotate-friendly
-cat /tmp/cots-mods-crowd/logging.properties.suffix >> "${new_install_dir}"/apache-tomcat/conf/logging.properties
+cat ./logging.properties.suffix >> "${new_install_dir}"/apache-tomcat/conf/logging.properties
 
 # Add the custom banner on the login page
-patch "${new_install_dir}"/crowd-webapp/console/login.jsp /tmp/cots-mods-crowd/login.jsp.patch
+patch "${new_install_dir}"/crowd-webapp/console/login.jsp ./login.jsp.patch
 
 # Redirect homepage "setup" page to the login page
 # See: https://confluence.atlassian.com/crowdkb/redirect-crowd-server-setup-page-to-crowd-webapp-login-page-839978419.html
 cp "${new_install_dir}"/crowd-webapp/WEB-INF/lib/urlrewritefilter-4.0.3.jar "${new_install_dir}"/apache-tomcat/lib/
 cp "${new_install_dir}"/crowd-webapp/WEB-INF/urlrewrite.xml "${new_install_dir}"/apache-tomcat/webapps/ROOT/WEB-INF
-patch "${new_install_dir}"/apache-tomcat/webapps/ROOT/WEB-INF/urlrewrite.xml /tmp/cots-mods-crowd/urlrewrite.xml.patch
-patch "${new_install_dir}"/apache-tomcat/webapps/ROOT/WEB-INF/web.xml /tmp/cots-mods-crowd/web.xml.patch
+patch "${new_install_dir}"/apache-tomcat/webapps/ROOT/WEB-INF/urlrewrite.xml ./urlrewrite.xml.patch
+patch "${new_install_dir}"/apache-tomcat/webapps/ROOT/WEB-INF/web.xml ./web.xml.patch
 
 # If we've been given a url, setup server.xml
 if [ -n "${crowdDomain}" ]; then
-    patch "${new_install_dir}"/apache-tomcat/conf/server.xml /tmp/cots-mods-crowd/server.xml.patch
+    patch "${new_install_dir}"/apache-tomcat/conf/server.xml ./server.xml.patch
     sed -i "s/{{ ised-crowd-domain }}/${crowdDomain}/g" "${new_install_dir}"/apache-tomcat/conf/server.xml
 fi
 
