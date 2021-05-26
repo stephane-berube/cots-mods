@@ -1,19 +1,16 @@
 #!/bin/bash -xe
 
-# TODO: Detect environment automatically
-#
-#       We could do this by inspecting the subnet on which the current machine
-#       is on, for example.
-
 if [[ $# -lt 1 ]]; then
-    echo "Usage: $0 <archiveUrl> [ConfluenceInstanceDomain]"
+    echo "Usage: $0 <archiveUrl> <Environment> [ConfluenceInstanceDomain]"
     echo ""
     echo "Example: $0 'https://example.org/archive.tar.gz' prod"
     exit 1
 fi
 
 ConfluenceArchiveUrl=$1
-ConfluenceInstanceDomain=$2
+# Currently not used, but here to be consistent with the other cots
+Environment=$2
+ConfluenceInstanceDomain=$3
 
 # Get and extract Confluence archive
 wget "${ConfluenceArchiveUrl}" -O /tmp/confluence.tar.gz
