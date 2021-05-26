@@ -66,7 +66,7 @@ systemctl stop jira
 # Replace the current install with the new one
 mv /opt/atlassian/jira/ "/opt/atlassian/jira-$(date +%Y-%m-%d)"
 mv "${new_install_dir}" /opt/atlassian/jira
-chown -R jira:jira jira
+chown -R jira:jira /opt/atlassian/jira
 
 # Start jira
 systemctl start jira
