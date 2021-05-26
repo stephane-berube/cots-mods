@@ -1,14 +1,16 @@
 #!/bin/bash -xe
 
 if [[ $# -lt 1 ]] ; then
-    echo "Usage: $0 <archiveUrl> [crowdDomain]"
+    echo "Usage: $0 <archiveUrl> <Environment> [crowdDomain]"
     echo ""
     echo "Example: $0 'https://example.org/package.tar.gz' dev crowd.dev.example.org"
     exit 1
 fi
 
 CrowdArchiveUrl=$1
-crowdDomain=$2
+# Currently not used, but here to be consistent with the other cots
+Environment=$2
+crowdDomain=$3
 
 # Get and extract Crowd archive
 wget "${CrowdArchiveUrl}" -O /tmp/crowd.tar.gz
