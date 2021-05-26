@@ -4,7 +4,7 @@
          </step>
          <step id="6" name="Closed">
              <meta name="jira.status.id">6</meta>
--	    <meta name="jira.issue.editable">false</meta>
+-            <meta name="jira.issue.editable">false</meta>
 +            <meta name="jira.issue.editable">true</meta>
              <actions>
                  <common-action id="003"/>
