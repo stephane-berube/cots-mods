@@ -1,15 +1,15 @@
---- ./server.xml	2019-10-03 12:20:44.581932533 +0000
-+++ ./server.xml	2019-10-03 12:23:46.719288361 +0000
+--- ./server.xml.orig	2022-08-03 09:01:19.033638929 -0400
++++ server.xml	2022-08-03 09:02:20.905639289 -0400
 @@ -7,10 +7,10 @@
           If using a http/https proxy, comment out this connector.
           ==============================================================================================================
          -->
 -        <Connector port="8090" connectionTimeout="20000" redirectPort="8443"
-+        <!--<Connector port="8090" connectionTimeout="20000" redirectPort="8443"
-                    maxThreads="48" minSpareThreads="10"
-                    enableLookups="false" acceptCount="10" debug="0" URIEncoding="UTF-8"
++        <!-- <Connector port="8090" connectionTimeout="20000" redirectPort="8443"
+                    maxThreads="48" maxPostSize="16777216" minSpareThreads="10"
+                    enableLookups="false" acceptCount="10" URIEncoding="UTF-8"
 -                   protocol="org.apache.coyote.http11.Http11NioProtocol"/>
-+                   protocol="org.apache.coyote.http11.Http11NioProtocol"/>-->
++                   protocol="org.apache.coyote.http11.Http11NioProtocol"/> -->
          <!--
           ==============================================================================================================
           HTTP - Proxying Confluence via Apache or Nginx over HTTP
@@ -20,12 +20,12 @@
 -        <!--
 +
          <Connector port="8090" connectionTimeout="20000" redirectPort="8443"
-                    maxThreads="48" minSpareThreads="10"
-                    enableLookups="false" acceptCount="10" debug="0" URIEncoding="UTF-8"
+                    maxThreads="48" maxPostSize="16777216" minSpareThreads="10"
+                    enableLookups="false" acceptCount="10" URIEncoding="UTF-8"
                     protocol="org.apache.coyote.http11.Http11NioProtocol"
                     scheme="https" secure="true" proxyName="<subdomain>.<domain>.com" proxyPort="443"/>
 -        -->
 +
  
-         <Engine name="Standalone" defaultHost="localhost" debug="0">
-             <Host name="localhost" debug="0" appBase="webapps" unpackWARs="true" autoDeploy="false" startStopThreads="4">
+         <Engine name="Standalone" defaultHost="localhost">
+             <Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="false" startStopThreads="4">
