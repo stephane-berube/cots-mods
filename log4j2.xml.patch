@@ -1,0 +1,43 @@
+--- ./log4j2.xml        2024-06-12 10:40:28.000000000 +0000
++++ /opt/atlassian/jira/atlassian-jira/WEB-INF/classes/log4j2.xml       2024-06-19 19:07:22.190020969 +0000
+@@ -246,6 +246,26 @@
+             <DefaultRolloverStrategy fileIndex="min" max="5"/>
+         </JiraHomeAppender>
+
++        <!--        ########################################################################-->
++        <!--        # ISED ADDED: JUN-19-2024 To capture REST API call in jira-rest-api.log -->
++        <!--        # See: <Logger name="com.atlassian.jira.rest"  Line: 847  to 853        -->
++        <!--        ########################################################################-->
++       <JiraHomeAppender name="api"
++                         fileName="jira-rest-api.log"
++                         filePattern="jira-rest-api.log.%i">
++           <PatternLayout alwaysWriteExceptions="false">
++               <Pattern>
++                %d{yyyy-MM-dd HH:mm:ss,SSSZ} %t %p %X{jira.username} %X{jira.request.id} %X{jira.request.ipaddr} %a %m %X{jira.request.url} %q %s %b %D%n
++                        </Pattern>
++            </PatternLayout>
++            <Policies>
++                        <SizeBasedTriggeringPolicy size="20480 KB"/>
++            </Policies>
++            <DefaultRolloverStrategy fileIndex="min" max="5"/>
++       </JiraHomeAppender>
++
++
++
+         <FluentdAppender name="fluentdAppender"
+                          fluentdEndpoint="http://localhost:9880">
+             <AtlassianJsonLayout
+@@ -823,5 +843,13 @@
+         <Logger name="com.atlassian.jira.appconsistency.integrity.IntegrityChecker" level="INFO" additivity="false">
+             <AppenderRef ref="filelog"/>
+         </Logger>
++
++        <!--        ########################################################################-->
++        <!--        # ISED ADDED: JUN-19-2024 To capture REST API call in jira-rest-api.log -->
++       <!--        # See: JiraHomeAppender name="api"  Line: 249 to 265                    -->
++        <!--        ########################################################################-->
++       <Logger name="com.atlassian.jira.rest" level="DEBUG" additivity="false">
++          <AppenderRef ref="api"/>
++       </Logger>
+     </Loggers>
+ </Configuration>

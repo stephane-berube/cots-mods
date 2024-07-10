@@ -53,6 +53,7 @@ patch "${new_install_dir}"/atlassian-jira/WEB-INF/classes/jira-workflow.xml ./ji
 # If we're not on Prod, turn off email notifications
 if [ "${Environment}" != "prod" ]
 then
+  patch "${new_install_dir}"/atlassian-jira/WEB-INF/classes/log4j2.xml ./log4j2.xml.patch
   sed -i 's/#DISABLE_NOTIFICATIONS=/DISABLE_NOTIFICATIONS=/' "${new_install_dir}"/bin/setenv.sh
 fi
 
