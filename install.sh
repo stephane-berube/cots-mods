@@ -1,5 +1,14 @@
 #!/bin/bash -xe
 
+# TODOS:
+# * /var/atlassian/application-data/bitbucket/shared/bitbucket.properties needs the following:
+#     server.proxy-port=443server.scheme=https
+#     server.secure=true
+#     server.require-ssl=true
+#     feature.public.access=false
+# * The following line in "/opt/atlassian/bitbucket/bin/set-jre-home.sh" needs to be commented out:
+# JRE_HOME="/opt/atlassian/bitbucket/9.4.8/jre"
+
 if [[ $# -lt 3 ]] ; then
     echo "Usage: $0 <installerUrl> <dataVolume> <appVolume> Environment [BitbucketUrl]"
     echo ""
