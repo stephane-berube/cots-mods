@@ -38,7 +38,7 @@ echo "${EC2AppVolumeMount}     /opt/atlassian/                xfs    defaults,no
 mount -a
 
 # Install deps
-yum install -y fontconfig git java-1.8.0-openjdk
+yum install -y fontconfig git java-17-amazon-corretto-headless
 
 # Get and run Bitbucket installer
 wget "${BitbucketInstallerUrl}" -O /tmp/installer.bin
@@ -58,14 +58,17 @@ mv /tmp/cots-mods/atlbitbucket.service /etc/systemd/system/atlbitbucket.service
 systemctl daemon-reload
 
 # Get RDS root cert for TLS connection
-wget https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem \
-        -O /var/atlassian/application-data/bitbucket/rds-ca-2019-root.pem
+wget https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem \
+        -O /var/atlassian/application-data/bitbucket/global-bundle.pem
 
 # Bitbucket uses its version number as a directory name when
 # it installs. Figure out what the directory name is rename it to 'bitbucket'
 # This folder is referenced by the systemd unit file (atlbitbucket.service)
-dir=$(find ./* -maxdepth 0 -type d | sort -r | head -n 1)
-mv "${dir}" bitbucket
+dir=$(find /opt/atlassian/bitbucket/* -maxdepth 0 -type d | sort -r | head -n 1)
+
+shopt -s dotglob # move dotfiles too
+mv "${dir}/*" /opt/atlassian/bitbucket/
+rmdir "${dir}"
 
 # If a url was provided, add it to the config file
 if [ -n "${BitbucketUrl}" ]
@@ -79,7 +82,7 @@ if [ "${Environment}" == "prod" ]; then
   systemctl enable atlbitbucket
 else
   # Delay Bitbucket startup when the EC2 is booting up (see comment in atlbitbucket.timer for more details)
-  mv /tmp/cots-mods-bitbucket/jira.timer /etc/systemd/system/atlbitbucket.timer
+  mv /tmp/cots-mods-bitbucket/atlbitbucket.timer /etc/systemd/system/atlbitbucket.timer
 
   # Enable JIRA service at boot-time via timer
   systemctl enable atlbitbucket.timer
@@ -90,3 +93,4 @@ systemctl start atlbitbucket
 
 # Cleanup
 rm -f /tmp/cots-mods /tmp/installer.bin /tmp/pkg.zip
+
