@@ -38,7 +38,7 @@ cat ./logging.properties.suffix >> "${new_install_dir}"/apache-tomcat/conf/loggi
 
 # Redirect homepage "setup" page to the login page
 # See: https://confluence.atlassian.com/crowdkb/redirect-crowd-server-setup-page-to-crowd-webapp-login-page-839978419.html
-cp "${new_install_dir}"/crowd-webapp/WEB-INF/lib/urlrewritefilter-4.0.4.jar "${new_install_dir}"/apache-tomcat/lib/
+cp "${new_install_dir}"/crowd-webapp/WEB-INF/lib/urlrewritefilter-5.1.3.jar "${new_install_dir}"/apache-tomcat/lib/
 cp "${new_install_dir}"/crowd-webapp/WEB-INF/urlrewrite.xml "${new_install_dir}"/apache-tomcat/webapps/ROOT/WEB-INF
 patch "${new_install_dir}"/apache-tomcat/webapps/ROOT/WEB-INF/urlrewrite.xml ./urlrewrite.xml.patch
 patch "${new_install_dir}"/apache-tomcat/webapps/ROOT/WEB-INF/web.xml ./web.xml.patch
