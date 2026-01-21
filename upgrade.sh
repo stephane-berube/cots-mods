@@ -34,7 +34,7 @@ echo 'crowd.home=/var/atlassian/application-data/crowd' >> "${new_install_dir}"/
 cat ./logging.properties.suffix >> "${new_install_dir}"/apache-tomcat/conf/logging.properties
 
 # Add the custom banner on the login page
-patch "${new_install_dir}"/crowd-webapp/console/login.jsp ./login.jsp.patch
+# patch "${new_install_dir}"/crowd-webapp/console/login.jsp ./login.jsp.patch
 
 # Redirect homepage "setup" page to the login page
 # See: https://confluence.atlassian.com/crowdkb/redirect-crowd-server-setup-page-to-crowd-webapp-login-page-839978419.html
