@@ -32,10 +32,13 @@ while [ ! -e "${EC2AppVolumeMount}" ]; do echo Waiting for EBS App volume to att
 mkfs -t xfs "${EC2AppVolumeMount}"
 
 # Add an entry to fstab to mount volume during boot
-echo "${EC2AppVolumeMount}     /opt/atlassian/crowd                xfs    defaults,noatime,nofail    0    2" >> /etc/fstab
+echo "${EC2AppVolumeMount}     /opt/atlassian/                xfs    defaults,noatime,nofail    0    2" >> /etc/fstab
 
 # Mount the volumes on current boot
 mount -a
+
+# Create "crowd" directory on the mounted volume
+mkdir /opt/atlassian/crowd
 
 # Install deps
 yum install -y fontconfig patch
