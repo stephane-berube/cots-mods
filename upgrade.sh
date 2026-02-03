@@ -1,16 +1,17 @@
 #!/bin/bash -xe
 
 if [[ $# -lt 1 ]] ; then
-    echo "Usage: $0 <archiveUrl> <Environment> [crowdDomain]"
+    echo "Usage: $0 <archiveUrl> <Environment> [crowdDomain] [crowdIntDomain]"
     echo ""
-    echo "Example: $0 'https://example.org/package.tar.gz' dev crowd.dev.example.org"
+    echo "Example: $0 'https://example.org/package.tar.gz' dev crowd.dev.example.org crowd-int.dev.example.org"
     exit 1
 fi
 
 CrowdArchiveUrl=$1
-# Currently not used, but here to be consistent with the other cots
+# "Environment" currently not used, but here to be consistent with the other cots
 Environment=$2
 crowdDomain=$3
+crowdIntDomain=$4
 
 # Get and extract Crowd archive
 wget "${CrowdArchiveUrl}" -O /tmp/crowd.tar.gz
@@ -47,6 +48,16 @@ patch "${new_install_dir}"/apache-tomcat/webapps/ROOT/WEB-INF/web.xml ./web.xml.
 if [ -n "${crowdDomain}" ]; then
     patch "${new_install_dir}"/apache-tomcat/conf/server.xml ./server.xml.patch
     sed -i "s/{{ ised-crowd-domain }}/${crowdDomain}/g" "${new_install_dir}"/apache-tomcat/conf/server.xml
+fi
+
+# If we've been given a "int" url, add additional connector to server.xml
+if [ -n "${crowdIntDomain}" ]; then
+    sed -i '/<Service name="Catalina">/{
+        s/<Service name="Catalina">//g
+        r server.xml-crowd-int
+    }' "${new_install_dir}"/apache-tomcat/conf/server.xml
+
+    sed -i "s/{{ ised-crowd-int-domain }}/${crowdIntDomain}/g" "${new_install_dir}"/apache-tomcat/conf/server.xml
 fi
 
 # Stop crowd

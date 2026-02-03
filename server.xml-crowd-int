@@ -1,0 +1,19 @@
+<Service name="Catalina">
+
+        <Connector acceptCount="100"
+                   connectionTimeout="20000"
+                   disableUploadTimeout="true"
+                   enableLookups="false"
+                   maxHttpHeaderSize="8192"
+                   maxThreads="150"
+                   minSpareThreads="25"
+                   port="8444"
+                   redirectPort="8443"
+                   useBodyEncodingForURI="true"
+                   URIEncoding="UTF-8"
+                   scheme="https"
+                   proxyName="{{ ised-crowd-int-domain }}"
+                   proxyPort="443"
+                   compression="on"
+                   sendReasonPhrase="true"
+                   compressableMimeType="text/html,text/xml,application/xml,text/plain,text/css,application/json,application/javascript,application/x-javascript" />

@@ -1,9 +1,9 @@
 #!/bin/bash -xe
 
 if [[ $# -lt 3 ]] ; then
-    echo "Usage: $0 <installerUrl> <dataVolume> <appVolume> [Environment] [crowdDomain]"
+    echo "Usage: $0 <installerUrl> <dataVolume> <appVolume> [Environment] [crowdDomain] [crowdIntDomain]"
     echo ""
-    echo "Example: $0 'https://example.org/package.tar.gz' /dev/sda /dev/sdb dev crowd.dev.example.orga"
+    echo "Example: $0 'https://example.org/package.tar.gz' /dev/sda /dev/sdb dev crowd.dev.example.org crowd-int.dev.example.org"
     exit 1
 fi
 
@@ -12,6 +12,7 @@ EC2DataVolumeMount=$2
 EC2AppVolumeMount=$3
 Environment=$4
 crowdDomain=$5
+crowdIntDomain=$6
 
 # Create directories
 mkdir -p /opt/atlassian/ /var/atlassian/application-data/crowd
@@ -83,6 +84,16 @@ patch /opt/atlassian/crowd/apache-tomcat/webapps/ROOT/WEB-INF/web.xml /tmp/cots-
 if [ -n "${crowdDomain}" ]; then
     patch /opt/atlassian/crowd/apache-tomcat/conf/server.xml /tmp/cots-mods-crowd/server.xml.patch
     sed -i "s/{{ ised-crowd-domain }}/${crowdDomain}/g" /opt/atlassian/crowd/apache-tomcat/conf/server.xml
+fi
+
+# If we've been given a "int" url, add additional connector to server.xml
+if [ -n "${crowdIntDomain}" ]; then
+    sed -i '/<Service name="Catalina">/{
+        s/<Service name="Catalina">//g
+        r server.xml-crowd-int
+    }' /opt/atlassian/crowd/apache-tomcat/conf/server.xml
+
+    sed -i "s/{{ ised-crowd-int-domain }}/${crowdIntDomain}/g" /opt/atlassian/crowd/apache-tomcat/conf/server.xml
 fi
 
 # Do a couple of things differently based on the environment
