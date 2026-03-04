@@ -71,11 +71,11 @@ mv /tmp/cots-mods-crowd/crowd.service /etc/systemd/system/crowd.service
 systemctl daemon-reload
 
 # Add the custom banner on the login page
-patch /opt/atlassian/crowd/crowd-webapp/console/login.jsp /tmp/cots-mods-crowd/login.jsp.patch
+# patch /opt/atlassian/crowd/crowd-webapp/console/login.jsp /tmp/cots-mods-crowd/login.jsp.patch
 
 # Redirect homepage "setup" page to the login page
 # See: https://confluence.atlassian.com/crowdkb/redirect-crowd-server-setup-page-to-crowd-webapp-login-page-839978419.html
-cp /opt/atlassian/crowd/crowd-webapp/WEB-INF/lib/urlrewritefilter-4.0.3.jar /opt/atlassian/crowd/apache-tomcat/lib/
+cp /opt/atlassian/crowd/crowd-webapp/WEB-INF/lib/urlrewritefilter-5.1.3.jar /opt/atlassian/crowd/apache-tomcat/lib/
 cp /opt/atlassian/crowd/crowd-webapp/WEB-INF/urlrewrite.xml /opt/atlassian/crowd/apache-tomcat/webapps/ROOT/WEB-INF
 patch /opt/atlassian/crowd/apache-tomcat/webapps/ROOT/WEB-INF/urlrewrite.xml /tmp/cots-mods-crowd/urlrewrite.xml.patch
 patch /opt/atlassian/crowd/apache-tomcat/webapps/ROOT/WEB-INF/web.xml /tmp/cots-mods-crowd/web.xml.patch
