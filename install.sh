@@ -80,6 +80,14 @@ cp /opt/atlassian/crowd/crowd-webapp/WEB-INF/urlrewrite.xml /opt/atlassian/crowd
 patch /opt/atlassian/crowd/apache-tomcat/webapps/ROOT/WEB-INF/urlrewrite.xml /tmp/cots-mods-crowd/urlrewrite.xml.patch
 patch /opt/atlassian/crowd/apache-tomcat/webapps/ROOT/WEB-INF/web.xml /tmp/cots-mods-crowd/web.xml.patch
 
+# Trust store
+trust_store_dir="/var/atlassian/application-data/crowd/upmconfig/truststore"
+mkdir -p "${trust_store_dir}"
+wget --directory-prefix "${trust_store_dir}" https://confluence.atlassian.com/upm/files/1489470540/1489470538/1/1736436578459/atlassian_ca_bundle-v1.tar.gz 
+tar -C "${trust_store_dir}" -xf "${trust_store_dir}/atlassian_ca_bundle-v1.tar.gz"
+rm "${trust_store_dir}/atlassian_ca_bundle-v1.tar.gz"
+sudo chown -R root:root "${trust_store_dir}"
+
 # If we've been given a url, setup server.xml
 if [ -n "${crowdDomain}" ]; then
     patch /opt/atlassian/crowd/apache-tomcat/conf/server.xml /tmp/cots-mods-crowd/server.xml.patch
