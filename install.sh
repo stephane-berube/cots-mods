@@ -70,8 +70,8 @@ mv /tmp/cots-mods-crowd/crowd.service /etc/systemd/system/crowd.service
 # Refresh systemd daemons since we've added a new unit file
 systemctl daemon-reload
 
-# Add the custom banner on the login page
-# patch /opt/atlassian/crowd/crowd-webapp/console/login.jsp /tmp/cots-mods-crowd/login.jsp.patch
+# Make OAuth work when HTTPS is terminated at the ALB (for "Service Accounts")
+patch "${new_install_dir}"/apache-tomcat/bin/setenv.sh ./setenv.sh.patch
 
 # Redirect homepage "setup" page to the login page
 # See: https://confluence.atlassian.com/crowdkb/redirect-crowd-server-setup-page-to-crowd-webapp-login-page-839978419.html

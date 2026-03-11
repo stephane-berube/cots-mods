@@ -1,0 +1,7 @@
+--- setenv.orig.sh      2026-03-11 17:06:00.911757642 +0000+++ setenv.sh   2026-03-11 16:59:53.031677100 +0000
+@@ -1,5 +1,6 @@ JAVA_OPTS="-Xms128m -Xmx512m -Dfile.encoding=UTF-8 $JAVA_OPTS"
+ JAVA_OPTS="$JAVA_OPTS -Dorg.apache.catalina.STRICT_SERVLET_COMPLIANCE=true"
++JAVA_OPTS="$JAVA_OPTS -Datlassian.oauth2.provider.skip.base.url.https.requirement=true"
+
+ export JAVA_OPTS
+
