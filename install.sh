@@ -77,7 +77,7 @@ wget --directory-prefix "${trust_store_dir}" https://confluence.atlassian.com/up
 tar -C "${trust_store_dir}" -xf "${trust_store_dir}/atlassian_ca_bundle-v1.tar.gz"
 rm "${trust_store_dir}/atlassian_ca_bundle-v1.tar.gz"
 chmod 644 "${trust_store_dir}/"*
-chown -R atlbitbucket:atlbitbucket "${trust_store_dir}"
+chown -R root:root "${trust_store_dir}"
 
 # Bitbucket uses its version number as a directory name when
 # it installs. Figure out what the directory name is rename it to 'bitbucket'
