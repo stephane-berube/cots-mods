@@ -70,6 +70,15 @@ systemctl daemon-reload
 wget https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem \
         -O /var/atlassian/application-data/bitbucket/global-bundle.pem
 
+# Trust store
+trust_store_dir="/var/atlassian/application-data/bitbucket/upmconfig/truststore"
+mkdir -p "${trust_store_dir}"
+wget --directory-prefix "${trust_store_dir}" https://confluence.atlassian.com/upm/files/1489470540/1489470538/1/1736436578459/atlassian_ca_bundle-v1.tar.gz
+tar -C "${trust_store_dir}" -xf "${trust_store_dir}/atlassian_ca_bundle-v1.tar.gz"
+rm "${trust_store_dir}/atlassian_ca_bundle-v1.tar.gz"
+chmod 644 "${trust_store_dir}/"*
+chown -R atlbitbucket:atlbitbucket "${trust_store_dir}"
+
 # Bitbucket uses its version number as a directory name when
 # it installs. Figure out what the directory name is rename it to 'bitbucket'
 # This folder is referenced by the systemd unit file (atlbitbucket.service)
