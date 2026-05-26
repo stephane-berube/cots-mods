@@ -61,7 +61,7 @@ service atlbitbucket stop
 systemctl disable atlbitbucket
 
 # Copy our systemd unit file
-mv /tmp/cots-mods/atlbitbucket.service /etc/systemd/system/atlbitbucket.service
+mv /tmp/cots-mods-bitbucket/atlbitbucket.service /etc/systemd/system/atlbitbucket.service
 
 # Refresh systemd daemons since we've added a new unit file
 systemctl daemon-reload
@@ -110,5 +110,5 @@ fi
 systemctl start atlbitbucket
 
 # Cleanup
-rm -f /tmp/cots-mods /tmp/installer.bin /tmp/pkg.zip
+rm -f /tmp/cots-mods-bitbucket /tmp/installer.bin /tmp/pkg.zip
 
