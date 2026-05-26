@@ -1,4 +1,4 @@
-#!/bin/bash -xe
+#!/bin/bash -eu
 
 # TODOS:
 # * /var/atlassian/application-data/bitbucket/shared/bitbucket.properties needs the following:
