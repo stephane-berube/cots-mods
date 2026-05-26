@@ -94,6 +94,12 @@ then
   echo "server.proxy-name=${BitbucketUrl}" >> /var/atlassian/application-data/bitbucket/shared/bitbucket.properties
 fi
 
+echo "server.proxy-port=443
+server.scheme=https
+server.secure=true
+server.require-ssl=true
+feature.public.access=false" >> /var/atlassian/application-data/bitbucket/shared/bitbucket.properties
+
 # Do a couple of things differently based on the environment
 if [ "${Environment}" == "prod" ]; then
   # Enable Bitbucket service at boot-time
