@@ -85,7 +85,7 @@ chown -R root:root "${trust_store_dir}"
 dir=$(find /opt/atlassian/bitbucket/* -maxdepth 0 -type d | sort -r | head -n 1)
 
 shopt -s dotglob # move dotfiles too
-mv "${dir}/*" /opt/atlassian/bitbucket/
+mv "${dir}"/* /opt/atlassian/bitbucket/
 rmdir "${dir}"
 
 # If a url was provided, add it to the config file
